@@ -11,7 +11,9 @@ async def call_tool(company_name: str, company_country: str):
 
         result = await client.call_tool(
             "scrape_url",
-            {"investor_page_url": "https://www.nestle.com/investors/annual-report"},
+            {
+                "investor_page_url": "https://www.scania.com/group/en/home/investors/financial-reports/annual-reports.html"
+            },
         )
         # print(f"Got the results from the playwright:{result}")
         if result.content[0].type == "text":
