@@ -1,5 +1,6 @@
 import logging
 import sys
+
 import structlog
 
 
@@ -25,16 +26,13 @@ class ColoredFormatter(logging.Formatter):
 
 
 def setup_logging(log_level: str = "INFO"):
-
-    console_handler = logging.StreamHandler(sys.stdout)
-
+    console_handler = logging.StreamHandler(sys.stderr)
     console_handler.setFormatter(ColoredFormatter("%(message)s"))
 
     root_logger = logging.getLogger()
 
     root_logger.setLevel(getattr(logging, log_level.upper(), logging.INFO))
 
-    # Remove duplicate handlers
     root_logger.handlers.clear()
 
     root_logger.addHandler(console_handler)

@@ -5,45 +5,65 @@ from pathlib import Path
 
 import nodriver as uc
 
+from utils import get_logger, setup_logging
+
+setup_logging()
+
+web_logger = get_logger("web_scrapper")
+
 PROFILE_DIR = Path("./automation_profile").absolute()
 
 
 async def scrap_url(url: str):
-
     browser = await uc.start(
         headless=False,
         user_data_dir=str(PROFILE_DIR),
     )
 
-    page = await browser.get(url)
-
+    web_logger.info("Warming up session to bypass deep-link redirect...")
+    base_url = "/".join(url.split("/")[:3])
+    page = await browser.get(base_url)
     try:
         await page.verify_cf()
-
     except Exception as e:
-        print("Cloudflare verify failed:", e)
+        web_logger.warning(
+            "Cloudflare verification failed during warm-up", error=str(e)
+        )
 
-    await asyncio.sleep(50)
+    await asyncio.sleep(20)
+    web_logger.info("Navigation started", requested_url=url)
+    await page.get(url)
+    await page.activate()
+    await asyncio.sleep(20)
 
-    links = await page.evaluate(
-        """
+    web_logger.info("Navigation completed", final_url=page.url)
+
+    links = await page.evaluate("""
         Array.from(document.querySelectorAll('a'))
             .map(a => ({
                 text: (a.innerText || '').trim(),
                 href: a.href
             }))
             .filter(x => x.href)
-    """
-    )
+        """)
 
     browser.stop()
 
-    return links
+    return {
+        "links": links,
+    }
 
 
 async def main():
+
     url = sys.argv[1]
+
     links = await scrap_url(url)
+    web_logger.info(
+        "Navigation completed",
+        total_links=len(links),
+    )
+
     print(json.dumps(links))
 
 
