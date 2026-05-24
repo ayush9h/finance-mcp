@@ -84,7 +84,7 @@ def scrape_url(investor_page_url: str):
 
         mcp_logger.info(
             "Scraping completed",
-            total_links=len(links),
+            total_links=len(links.get("links")),
         )
 
         return links
