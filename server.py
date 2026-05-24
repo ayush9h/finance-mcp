@@ -30,17 +30,18 @@ def find_investor_page_url(company_name: str, company_country: str) -> List:
         company_name=company_name,
         company_country=company_country,
     )
-
+    query = f"{company_name} {company_country} " "investor page annual report"
     with DDGS() as ddgs:
-        results = ddgs.text(
-            f'{company_name} {company_country} "annual report" investor relations url',
-            max_results=5,
+
+        results = list(
+            ddgs.text(
+                query,
+                max_results=10,
+            )
         )
-        results = list(results)
 
     mcp_logger.info(
-        "Investor page search completed",
-        total_results=len(results),
+        "Investor page search completed", total_results=len(results), results=results
     )
 
     return results
