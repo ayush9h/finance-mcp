@@ -11,7 +11,14 @@ setup_logging()
 
 web_logger = get_logger("web_scrapper")
 
+
 PROFILE_DIR = Path("./automation_profile").absolute()
+def ensure_protocol(url: str) -> str:
+
+    if not url.startswith(("http://", "https://")):
+        url = f"https://{url}"
+
+    return url
 
 
 async def scrap_url(url: str):
@@ -20,8 +27,12 @@ async def scrap_url(url: str):
         user_data_dir=str(PROFILE_DIR),
     )
 
+    normalized_url = ensure_protocol(url)
+
     web_logger.info("Warming up session to bypass deep-link redirect...")
-    base_url = "/".join(url.split("/")[:3])
+
+    base_url = "/".join(normalized_url.split("/")[:3])
+
     page = await browser.get(base_url)
     try:
         await page.verify_cf()
@@ -32,7 +43,7 @@ async def scrap_url(url: str):
 
     await asyncio.sleep(20)
     web_logger.info("Navigation started", requested_url=url)
-    await page.get(url)
+    await page.get(normalized_url)
     await page.activate()
     await asyncio.sleep(20)
 

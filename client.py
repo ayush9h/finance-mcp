@@ -61,7 +61,7 @@ async def some_fn(company_name: str, company_country: str):
         result = await client.call_tool(
             "scrape_url",
             {
-                "investor_page_url": "https://www.nestle.com/investors/annual-report",
+                "investor_page_url": "www.nestle.in/investors/stockandfinancials/annualreports",
             },
         )
 
