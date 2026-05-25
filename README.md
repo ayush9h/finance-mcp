@@ -6,7 +6,7 @@
   />
 </p>
 
-<h3 align="center">💵 FinanceMCP</h3>
+<h3 align="center">💵 Finance MCP</h3>
 
 <p align="center">
   Model Context Protocol (MCP) server and client for retrieving annual reports of publicly listed companies across global stock exchanges.
