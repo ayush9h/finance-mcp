@@ -1,52 +1,119 @@
-# Finance MCP
-Model Context Protocol (MCP) server and client for finance teams to retrieve annual reports of publicly listed companies across global stock exchanges.
+<p align="center">
+  <img 
+    src="https://github.com/user-attachments/assets/6c0fe3a3-f5ee-4c35-a7d3-b57afcd09351"
+    alt="Finance MCP Banner"
+    width="100%"
+  />
+</p>
+
+<h3 align="center">💵 FinanceMCP</h3>
+
+<p align="center">
+  Model Context Protocol (MCP) server and client for retrieving annual reports of publicly listed companies across global stock exchanges.
+</p>
+
+<p align="center">
+  Built for financial research, compliance workflows, and automated document pipelines.
+</p>
+
+
+
+## Overview
+
+Finance MCP provides a lightweight MCP-compatible server and client architecture for discovering and retrieving annual reports from publicly listed companies worldwide.
+
+The project is designed for:
+
+- Financial research teams
+- Investment analysis platforms
+- Internal finance automation systems
+
 
 ## Features
 
-- Fetch annual reports urls for listed companies globally
-- Designed for research, compliance, and financial analysis teams
+- Retrieve annual report URLs for globally listed companies
+- MCP-compatible server and client implementation
+- Simple Python-based architecture
+- Easy integration into existing workflows
+- Optimized for automation and research use cases
+
+
+## Requirements
+
+- Python 3.10+
+- `uv` package manager
+
+Install `uv`:
+
+```bash
+pip install uv
+```
+
 
 ## Setup
 
-### Create Environment with uv
+### 1. Create Virtual Environment
 
 ```bash
 uv venv
-source .venv/bin/activate   # Linux / macOS
+```
 
-# Windows
+Activate the environment:
+
+#### Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+#### Windows
+
+```powershell
 .venv\Scripts\activate
 ```
 
-### Install Dependencies
+
+### 2. Install Dependencies
 
 ```bash
 uv pip install -r requirements.txt
 ```
 
-## Running the Project
 
-Run the MCP server and client side by side in separate terminals.
 
-### Start Server
+## Running the Application
+
+Start the MCP server and client in separate terminals.
+
+### Start MCP Server
 
 ```bash
 python server.py
 ```
 
-### Start Client
+### Start Streamlit 
 
 ```bash
-python client.py
+streamlit run app.py
 ```
+
+<img width="1919" height="878" alt="image" src="https://github.com/user-attachments/assets/d2bd8f1b-9968-408d-82c5-df923d5e662b" />
+
 
 ## Example Use Cases
 
-- Download annual reports from companies official annual reports pages
-- Automate financial document collection
-- Integrate reports into internal finance tools
-- Build research and valuation pipelines
+### Financial Research
+
+Retrieve annual reports for public companies and integrate them into research workflows.
+
+### Compliance Automation
+
+Automate collection and archival of company disclosures and filings.
+
+### Internal Tooling
+
+Integrate report discovery into enterprise finance systems and dashboards.
 
 ## License
 
-MIT License
+This project is licensed under the MIT License.
