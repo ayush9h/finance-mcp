@@ -1,14 +1,10 @@
-# MCP for Finance Teams
-
+# Finance MCP
 Model Context Protocol (MCP) server and client for finance teams to retrieve annual reports of publicly listed companies across global stock exchanges.
 
 ## Features
 
-- Fetch annual reports for listed companies globally
-- MCP-based client-server architecture
-- Fast API integration for downstream finance workflows
+- Fetch annual reports urls for listed companies globally
 - Designed for research, compliance, and financial analysis teams
-- Lightweight setup with modern Python tooling
 
 ## Setup
 
@@ -46,7 +42,7 @@ python client.py
 
 ## Example Use Cases
 
-- Download annual reports from stock exchange websites
+- Download annual reports from companies official annual reports pages
 - Automate financial document collection
 - Integrate reports into internal finance tools
 - Build research and valuation pipelines

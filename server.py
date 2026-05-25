@@ -2,7 +2,8 @@ import json
 import subprocess
 import sys
 from typing import List
-
+import requests
+from bs4 import BeautifulSoup
 from ddgs import DDGS
 from fastmcp import FastMCP
 
@@ -14,7 +15,7 @@ mcp_logger = get_logger(name="mcp_logger")
 
 mcp = FastMCP("Finance MCP Server")
 
-
+url = "https://html.duckduckgo.com/html/"
 @mcp.tool(
     name="find_investor_page_url",
     meta={
@@ -30,14 +31,33 @@ def find_investor_page_url(company_name: str, company_country: str) -> List:
         company_name=company_name,
         company_country=company_country,
     )
-    query = f"{company_name} {company_country} " "investor page annual report"
-    with DDGS() as ddgs:
 
-        results = list(
-            ddgs.text(
-                query,
-                max_results=10,
-            )
+    response = requests.post(
+        url,
+        data={"q": f"{company_name} {company_country} annual report page"},
+        headers={"User-Agent": ("Mozilla/5.0")},
+        timeout=30,
+    )
+
+    soup = BeautifulSoup(
+        response.text,
+        "html.parser",
+    )
+
+    results = []
+
+    for result in soup.select(".result"):
+
+        title_elem = result.select_one(".result__title")
+        link_elem = result.select_one(".result__url")
+        snippet_elem = result.select_one(".result__snippet")
+
+        results.append(
+            {
+                "title": (title_elem.get_text(strip=True) if title_elem else ""),
+                "url": (link_elem.get_text(strip=True) if link_elem else ""),
+                "snippet": (snippet_elem.get_text(strip=True) if snippet_elem else ""),
+            }
         )
 
     mcp_logger.info(
