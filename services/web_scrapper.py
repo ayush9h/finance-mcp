@@ -5,12 +5,6 @@ from pathlib import Path
 
 import nodriver as uc
 
-from utils import get_logger, setup_logging
-
-setup_logging()
-
-web_logger = get_logger("web_scrapper")
-
 
 PROFILE_DIR = Path("./automation_profile").absolute()
 def ensure_protocol(url: str) -> str:
@@ -27,27 +21,25 @@ async def scrap_url(url: str):
         user_data_dir=str(PROFILE_DIR),
     )
 
+    # ===========This code block================
+    # can be made better: Done to prevent redirection=======
     normalized_url = ensure_protocol(url)
-
-    web_logger.info("Warming up session to bypass deep-link redirect...")
-
     base_url = "/".join(normalized_url.split("/")[:3])
 
     page = await browser.get(base_url)
+
     try:
         await page.verify_cf()
     except Exception as e:
-        web_logger.warning(
-            "Cloudflare verification failed during warm-up", error=str(e)
-        )
+        raise Exception(f"Error occured due to{e}")
 
     await asyncio.sleep(20)
-    web_logger.info("Navigation started", requested_url=url)
+
     await page.get(normalized_url)
     await page.activate()
-    await asyncio.sleep(20)
 
-    web_logger.info("Navigation completed", final_url=page.url)
+    await asyncio.sleep(20)
+    # =======================================================================
 
     links = await page.evaluate("""
         Array.from(document.querySelectorAll('a'))
@@ -70,11 +62,8 @@ async def main():
     url = sys.argv[1]
 
     links = await scrap_url(url)
-    web_logger.info(
-        "Navigation completed",
-        total_links=len(links),
-    )
 
+    # Using this to be used in stdout
     print(json.dumps(links))
 
 

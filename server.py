@@ -2,9 +2,6 @@ import json
 import subprocess
 import sys
 from typing import List
-import requests
-from bs4 import BeautifulSoup
-from ddgs import DDGS
 from fastmcp import FastMCP
 
 from utils import get_logger, setup_logging
@@ -15,7 +12,6 @@ mcp_logger = get_logger(name="mcp_logger")
 
 mcp = FastMCP("Finance MCP Server")
 
-url = "https://html.duckduckgo.com/html/"
 @mcp.tool(
     name="find_investor_page_url",
     meta={
@@ -32,33 +28,7 @@ def find_investor_page_url(company_name: str, company_country: str) -> List:
         company_country=company_country,
     )
 
-    response = requests.post(
-        url,
-        data={"q": f"{company_name} {company_country} annual report page"},
-        headers={"User-Agent": ("Mozilla/5.0")},
-        timeout=30,
-    )
-
-    soup = BeautifulSoup(
-        response.text,
-        "html.parser",
-    )
-
     results = []
-
-    for result in soup.select(".result"):
-
-        title_elem = result.select_one(".result__title")
-        link_elem = result.select_one(".result__url")
-        snippet_elem = result.select_one(".result__snippet")
-
-        results.append(
-            {
-                "title": (title_elem.get_text(strip=True) if title_elem else ""),
-                "url": (link_elem.get_text(strip=True) if link_elem else ""),
-                "snippet": (snippet_elem.get_text(strip=True) if snippet_elem else ""),
-            }
-        )
 
     mcp_logger.info(
         "Investor page search completed", total_results=len(results), results=results
@@ -86,7 +56,7 @@ def scrape_url(investor_page_url: str):
         [
             sys.executable,
             "-m",
-            "scrappers.web_scrapper",
+            "services.web_scrapper",
             investor_page_url,
         ],
         capture_output=True,
