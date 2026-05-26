@@ -1,5 +1,4 @@
 from typing import Dict, List
-import json
 
 
 def normalize_link(link: Dict) -> Dict:
@@ -23,28 +22,12 @@ def normalize_link(link: Dict) -> Dict:
 
 def deduplicate_links(links: List[Dict]) -> List[Dict]:
     seen = set()
-    unique_links = []
+    result = []
+    for link in map(normalize_link, links):
 
-    for raw_link in links:
+        href = link.get("href")
+        if href and href not in seen:
+            seen.add(href)
+            result.append(href)
 
-        link = normalize_link(raw_link)
-
-        href = link["href"]
-        text = link["text"]
-
-        if not href:
-            continue
-
-        if href in seen:
-            continue
-
-        seen.add(href)
-
-        unique_links.append(
-            {
-                "text": text,
-                "href": href,
-            }
-        )
-
-    return unique_links
+    return result

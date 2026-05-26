@@ -2,15 +2,18 @@ import json
 import subprocess
 import sys
 from typing import List
+
 from fastmcp import FastMCP
 
 from utils import get_logger, setup_logging
+from services import exec_ddgs
 
 setup_logging()
 
 mcp_logger = get_logger(name="mcp_logger")
 
 mcp = FastMCP("Finance MCP Server")
+
 
 @mcp.tool(
     name="find_investor_page_url",
@@ -28,7 +31,10 @@ def find_investor_page_url(company_name: str, company_country: str) -> List:
         company_country=company_country,
     )
 
-    results = []
+    results = exec_ddgs(
+        company_name=company_name,
+        company_country=company_country,
+    )
 
     mcp_logger.info(
         "Investor page search completed", total_results=len(results), results=results

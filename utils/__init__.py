@@ -1,6 +1,6 @@
-from .logger import get_logger, setup_logging
-from .helpers import deduplicate_links, normalize_link
 from .config import HEADERS
+from .helpers import deduplicate_links, normalize_link
+from .logger import get_logger, setup_logging
 
 __all__ = [
     "setup_logging",

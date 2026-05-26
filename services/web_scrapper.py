@@ -5,8 +5,9 @@ from pathlib import Path
 
 import nodriver as uc
 
-
 PROFILE_DIR = Path("./automation_profile").absolute()
+
+
 def ensure_protocol(url: str) -> str:
 
     if not url.startswith(("http://", "https://")):
@@ -41,14 +42,16 @@ async def scrap_url(url: str):
     await asyncio.sleep(20)
     # =======================================================================
 
-    links = await page.evaluate("""
+    links = await page.evaluate(
+        """
         Array.from(document.querySelectorAll('a'))
             .map(a => ({
                 text: (a.innerText || '').trim(),
                 href: a.href
             }))
             .filter(x => x.href)
-        """)
+        """
+    )
 
     browser.stop()
 

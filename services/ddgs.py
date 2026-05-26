@@ -2,12 +2,9 @@ from typing import List
 
 import requests
 from bs4 import BeautifulSoup
-from tenacity import (
-    retry,
-    stop_after_attempt,
-    wait_exponential,
-    retry_if_exception_type,
-)
+from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
+                      wait_exponential)
+
 from utils import HEADERS
 
 DDGS_URL = "https://html.duckduckgo.com/html/"

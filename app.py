@@ -1,5 +1,6 @@
 import asyncio
 import json
+
 import pandas as pd
 import streamlit as st
 
@@ -30,7 +31,7 @@ with st.sidebar:
 
     run_button = st.button(
         "Run Workflow",
-        use_container_width=True,
+        width=True,
     )
 
 col1, col2 = st.columns([1, 2])
@@ -89,7 +90,7 @@ if run_button:
 
             table_placeholder.dataframe(
                 df,
-                use_container_width=True,
+                width=True,
             )
 
             json_data = json.dumps(
