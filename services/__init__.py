@@ -1,5 +1,5 @@
-from .web_scrapper import scrap_url
 from .ddgs import exec_ddgs
+from .web_scrapper import scrap_url
 
 __all__ = ["scrap_url", "exec_ddgs"]
 

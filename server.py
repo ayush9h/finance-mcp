@@ -4,9 +4,10 @@ import sys
 from typing import List
 
 from fastmcp import FastMCP
+from starlette.responses import JSONResponse
 
-from utils import get_logger, setup_logging
 from services import exec_ddgs
+from utils import get_logger, setup_logging
 
 setup_logging()
 
@@ -94,5 +95,11 @@ def scrape_url(investor_page_url: str):
         return []
 
 
-if __name__ == "__main__":
-    mcp.run(transport="http", port=8000, show_banner=False)
+@mcp.custom_route("/health", methods=["GET"])
+async def health_check(request):
+    return JSONResponse(
+        {"status": "healthy", "service": "finance-mcp is up and running"}
+    )
+
+
+app = mcp.http_app(transport="http", path="/v1/mcp")
