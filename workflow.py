@@ -3,7 +3,7 @@ from typing import Any, Dict
 
 from fastmcp import Client
 
-from utils import deduplicate_links
+from src.utils import deduplicate_links
 
 MCP_SERVER_URL = "http://localhost:8000/v1/mcp"
 

@@ -1,14 +1,14 @@
 import json
 import subprocess
 import sys
-from typing import List
 
 from fastmcp import FastMCP
 from starlette.responses import JSONResponse
 
-from services import exec_ddgs
-from utils import get_logger, setup_logging
-from utils.patterns import annual_report_regex
+from src.services import exec_ddgs
+from src.utils import get_logger, setup_logging
+from src.utils.patterns import annual_report_regex
+from prefab_ui.components import DataTable, DataTableColumn
 
 setup_logging()
 
@@ -24,8 +24,9 @@ mcp = FastMCP("Finance MCP Server")
     },
     description="Extracts the investor page url for a particular company for annual reports scraping",
     tags={"investor page link", "annual report url"},
+    app=True,
 )
-def find_investor_page_url(company_name: str, company_country: str) -> List:
+def find_investor_page_url(company_name: str, company_country: str) -> DataTable:
 
     mcp_logger.info(
         "Searching investor page",
@@ -42,7 +43,15 @@ def find_investor_page_url(company_name: str, company_country: str) -> List:
         "Investor page search completed", total_results=len(results), results=results
     )
 
-    return results
+    return DataTable(
+        columns=[
+            DataTableColumn(key="title", header="Title", sortable=True),
+            DataTableColumn(key="url", header="URL", sortable=True),
+            DataTableColumn(key="snippet", header="Short Snippet", sortable=True),
+        ],
+        rows=results,  # type: ignore
+        search=True,
+    )
 
 
 @mcp.tool(

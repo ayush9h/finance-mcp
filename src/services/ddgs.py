@@ -1,11 +1,12 @@
-from typing import List
+from typing import List, Dict
 
 import requests
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
                       wait_exponential)
 
-from utils import HEADERS
+from src.utils import HEADERS
 
 DDGS_URL = "https://html.duckduckgo.com/html/"
 
@@ -39,7 +40,7 @@ def _search(query: str) -> str:
 def exec_ddgs(
     company_name: str,
     company_country: str,
-) -> List:
+) -> List[Dict[str, Tag | str]]:
     """
     Search DuckDuckGo HTML results.
 
