@@ -16,6 +16,12 @@
   Built for financial research, compliance workflows, and automated document pipelines.
 </p>
 
+<div align="center">
+
+![Python](https://img.shields.io/badge/python-3.13-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+</div>
 
 
 ## Overview
