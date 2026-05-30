@@ -1,5 +1,4 @@
 from src.services import exec_ddgs
-from prefab_ui.components import DataTable, DataTableColumn
 from src.utils.logger import get_logger
 
 from fastmcp import FastMCP
@@ -17,7 +16,7 @@ def register_search_page_tool(mcp: FastMCP):
         tags={"investor page link", "annual report url"},
         app=True,
     )
-    def search_page_url(company_name: str, company_country: str) -> DataTable:
+    def search_page_url(company_name: str, company_country: str):
 
         logger.info(
             "Searching investor page",
@@ -36,12 +35,4 @@ def register_search_page_tool(mcp: FastMCP):
             results=results,
         )
 
-        return DataTable(
-            columns=[
-                DataTableColumn(key="title", header="Title", sortable=True),
-                DataTableColumn(key="url", header="URL", sortable=True),
-                DataTableColumn(key="snippet", header="Short Snippet", sortable=True),
-            ],
-            rows=results,  # type: ignore
-            search=True,
-        )
+        return results

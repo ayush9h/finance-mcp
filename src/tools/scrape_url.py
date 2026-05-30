@@ -9,6 +9,7 @@ logger = get_logger(__name__)
 
 
 def register_scrape_page_tool(mcp: FastMCP):
+
     @mcp.tool(
         name="scrape_page_tool",
         meta={
@@ -28,12 +29,14 @@ def register_scrape_page_tool(mcp: FastMCP):
             [
                 sys.executable,
                 "-m",
-                "services.web_scrapper",
+                "src.services.scrape_inv_url",
                 investor_page_url,
             ],
             capture_output=True,
             text=True,
         )
+        if result.stderr:
+            logger.info("Logs from standalone scraper:\n%s", result.stderr)
 
         if result.returncode != 0:
             logger.error(
@@ -44,17 +47,29 @@ def register_scrape_page_tool(mcp: FastMCP):
 
         try:
             data = json.loads(result.stdout)
+            logger.info(f"data:{data}")
 
             annual_report_links = []
 
             for link in data.get("links", []):
-                text = link.get("text", "")
-                href = link.get("href", "")
+
+                obj = {}
+
+                for key, value in link.get("value", []):
+                    obj[key] = value.get("value")
+
+                text = obj.get("text", "")
+                href = obj.get("href", "")
 
                 searchable_text = f"{text} {href}".lower()
 
                 if annual_report_regex.search(searchable_text):
-                    annual_report_links.append(link)
+                    annual_report_links.append(
+                        {
+                            "text": text,
+                            "href": href,
+                        }
+                    )
 
             logger.info(
                 "Scraping completed",
