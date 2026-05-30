@@ -8,6 +8,7 @@ from starlette.responses import JSONResponse
 
 from services import exec_ddgs
 from utils import get_logger, setup_logging
+from utils.patterns import annual_report_regex
 
 setup_logging()
 
@@ -78,14 +79,26 @@ def scrape_url(investor_page_url: str):
         return []
 
     try:
-        links = json.loads(result.stdout)
+        data = json.loads(result.stdout)
+
+        annual_report_links = []
+
+        for link in data.get("links", []):
+            text = link.get("text", "")
+            href = link.get("href", "")
+
+            searchable_text = f"{text} {href}".lower()
+
+            if annual_report_regex.search(searchable_text):
+                annual_report_links.append(link)
 
         mcp_logger.info(
             "Scraping completed",
-            total_links=len(links.get("links")),
+            total_links=len(data.get("links", [])),
+            annual_report_links=len(annual_report_links),
         )
 
-        return links
+        return annual_report_links
 
     except Exception as e:
         mcp_logger.exception(
