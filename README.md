@@ -1,20 +1,16 @@
 <p align="center">
-  <img 
-    src="https://github.com/user-attachments/assets/6c0fe3a3-f5ee-4c35-a7d3-b57afcd09351"
+  <img
+    src="https://github.com/user-attachments/assets/f9efa3fd-2d12-419e-a962-72a95609eb8d"
     alt="Finance MCP Banner"
-    width="100%"
+    width="700"
   />
 </p>
-
 <h3 align="center">💵 Finance MCP</h3>
 
 <p align="center">
   Model Context Protocol (MCP) server and client for retrieving annual reports of publicly listed companies across global stock exchanges.
 </p>
 
-<p align="center">
-  Built for financial research, compliance workflows, and automated document pipelines.
-</p>
 
 <div align="center">
 
@@ -49,7 +45,7 @@ The project is designed for:
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.13+
 - `uv` package manager
 
 Install `uv`:

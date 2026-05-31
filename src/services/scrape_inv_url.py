@@ -2,6 +2,7 @@ import asyncio
 import json
 import sys
 from pathlib import Path
+from typing import Dict
 
 import nodriver as uc
 
@@ -13,14 +14,25 @@ PROFILE_DIR = Path("./automation_profile").absolute()
 
 
 def ensure_protocol(url: str) -> str:
-
+    """
+    Ensures the protocol is always https.
+    """
     if not url.startswith(("http://", "https://")):
         url = f"https://{url}"
 
     return url
 
 
-async def scrape_url(url: str):
+async def scrape_url(url: str) -> Dict:
+    """
+    Scraps the investor page through nodriver.
+
+    Params:
+    - url: str = Investor page for company
+
+    Returns:
+    - dictionary of scraped links
+    """
     browser = await uc.start(
         headless=False,
         user_data_dir=str(PROFILE_DIR),
@@ -74,7 +86,7 @@ async def main():
 
         print(json.dumps(links))
 
-    except Exception as e:
+    except Exception:
         import traceback
 
         traceback.print_exc()

@@ -1,3 +1,5 @@
+from typing import List
+
 from fastmcp import FastMCP
 
 from src.services import exec_ddgs
@@ -7,16 +9,17 @@ logger = get_logger(__name__)
 
 
 def register_search_page_tool(mcp: FastMCP):
+
     @mcp.tool(
         name="search_page_tool",
         meta={
             "version": "0.1",
         },
-        description="Extracts the investor page url for a particular company for annual reports scraping",
+        description="Extracts the investor page url for a particular company",
         tags={"investor page link", "annual report url"},
         app=True,
     )
-    def search_page_url(company_name: str, company_country: str):
+    def search_page_url(company_name: str, company_country: str) -> List:
 
         logger.info(
             "Searching investor page",

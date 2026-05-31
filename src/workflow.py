@@ -73,7 +73,9 @@ class InvestorWorkflow:
 
         best_match = investor_results[0]
 
-        scraped_data: Dict = await self.scrape_page(investor_page_url=best_match["url"])
+        scraped_data: Dict = await self.scrape_page(
+            investor_page_url=best_match["url"],
+        )
 
         unique_links = deduplicate_links(scraped_data.get("links", []))
         return {

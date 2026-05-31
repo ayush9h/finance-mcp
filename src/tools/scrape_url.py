@@ -1,6 +1,7 @@
 import json
 import subprocess
 import sys
+from typing import Dict
 
 from fastmcp import FastMCP
 
@@ -22,7 +23,7 @@ def register_scrape_page_tool(mcp: FastMCP):
         description="Scraps the investor page url for the annual reports",
         tags={"investor page link", "scrape"},
     )
-    def scrape_url(investor_page_url: str):
+    def scrape_url(investor_page_url: str) -> Dict:
 
         logger.info(
             "Starting scrape",
