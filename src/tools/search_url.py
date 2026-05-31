@@ -1,7 +1,7 @@
+from fastmcp import FastMCP
+
 from src.services import exec_ddgs
 from src.utils.logger import get_logger
-
-from fastmcp import FastMCP
 
 logger = get_logger(__name__)
 

@@ -1,6 +1,7 @@
-from .search_url import register_search_page_tool
-from .scrape_url import register_scrape_page_tool
 from fastmcp import FastMCP
+
+from .scrape_url import register_scrape_page_tool
+from .search_url import register_search_page_tool
 
 
 def register_tools(mcp: FastMCP):

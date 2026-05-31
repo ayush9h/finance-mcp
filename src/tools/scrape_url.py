@@ -13,6 +13,7 @@ def register_scrape_page_tool(mcp: FastMCP):
     """
     Tool to scrape the investor relation page for the raw links
     """
+
     @mcp.tool(
         name="scrape_page_tool",
         meta={

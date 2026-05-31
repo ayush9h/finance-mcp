@@ -47,15 +47,17 @@ async def scrape_url(url: str):
 
         # =======================================================================
 
-        links = await page.evaluate("""
+        links = await page.evaluate(
+            """
             Array.from(document.querySelectorAll('a'))
                 .map(a => ({
                     text: (a.innerText || '').trim(),
                     href: a.href
                 }))
                 .filter(x => x.href)
-            """)
-        # logger.info(f"got these:{links}")
+            """
+        )
+
         return {
             "links": links,
         }
