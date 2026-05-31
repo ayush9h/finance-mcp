@@ -2,8 +2,10 @@ import asyncio
 import json
 import sys
 from pathlib import Path
-from src.utils.logger import get_logger
+
 import nodriver as uc
+
+from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
