@@ -44,6 +44,9 @@ The project is designed for:
 - Optimized for automation and research use cases
 
 
+<img width="1881" height="815" alt="image" src="https://github.com/user-attachments/assets/ba334110-0053-4fd9-a42f-125b767ec992" />
+
+
 ## Requirements
 
 - Python 3.10+
@@ -102,9 +105,6 @@ uvicorn server:app --host 0.0.0.0 --port 8000
 ```bash
 streamlit run app.py
 ```
-
-<img width="1919" height="878" alt="image" src="https://github.com/user-attachments/assets/d2bd8f1b-9968-408d-82c5-df923d5e662b" />
-
 
 ## Example Use Cases
 
