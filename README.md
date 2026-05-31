@@ -94,7 +94,7 @@ Start the MCP server and client in separate terminals.
 ### Start MCP Server
 
 ```bash
-python server.py
+uvicorn server:app --host 0.0.0.0 --port 8000
 ```
 
 ### Start Streamlit 
