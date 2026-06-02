@@ -57,34 +57,11 @@ pip install uv
 
 ## Setup
 
-### 1. Create Virtual Environment
+### 1. Sync up with the environment
 
-```bash
-uv venv
 ```
-
-Activate the environment:
-
-#### Linux / macOS
-
-```bash
-source .venv/bin/activate
+uv sync
 ```
-
-#### Windows
-
-```powershell
-.venv\Scripts\activate
-```
-
-
-### 2. Install Dependencies
-
-```bash
-uv pip install -r requirements.txt
-```
-
-
 
 ## Running the Application
 
