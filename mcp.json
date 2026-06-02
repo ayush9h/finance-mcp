@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "finance-mcp": {
+      "type": "sse",
+      "url": "http://localhost:8000/v1/mcp"
+    }
+  }
+}

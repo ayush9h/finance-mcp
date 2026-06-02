@@ -16,4 +16,7 @@ async def health_check(request):
     )
 
 
-app = mcp.http_app(transport="http", path="/v1/mcp")
+app = mcp.http_app(
+    transport="http",
+    path="/v1/mcp",
+)
