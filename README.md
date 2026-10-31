@@ -1,20 +1,21 @@
 <p align="center">
   <img
-    src="https://github.com/user-attachments/assets/f9efa3fd-2d12-419e-a962-72a95609eb8d"
+    src="https://github.com/user-attachments/assets/1989124b-e891-4bd7-a9d8-95d1f7bfd3e0"
     alt="Finance MCP Banner"
-    width="700"
+    width="500"
   />
 </p>
-<h3 align="center">💵 Finance MCP</h3>
+<h3 align="center"><strong>Finance</strong>MCP</h3>
+
 
 <p align="center">
-  Model Context Protocol (MCP) server and client for retrieving annual reports of publicly listed companies across global stock exchanges.
+  Model Context Protocol (MCP) server to retrieve annual reports for companies listed on stock exchanges
 </p>
 
 
 <div align="center">
 
-![Python](https://img.shields.io/badge/python-3.13-blue)
+![Go](https://img.shields.io/badge/go-1.27-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 </div>
@@ -22,7 +23,7 @@
 
 ## Overview
 
-Finance MCP provides a lightweight MCP-compatible server and client architecture for discovering and retrieving annual reports from publicly listed companies worldwide.
+FinanceMCP provides a lightweight MCP-compatible server for discovering and retrieving annual reports from publicly listed companies worldwide.
 
 The project is designed for:
 
@@ -33,51 +34,74 @@ The project is designed for:
 
 ## Features
 
-- Retrieve annual report URLs for globally listed companies
-- MCP-compatible server and client implementation
-- Simple Python-based architecture
+- Find report links on company pages with the `scrape_links` tool
+- Open pages in a real browser, including pages that load links with JavaScript
+- MCP over Streamable HTTP, protected by a bearer token
+- Local files and internal addresses are rejected
 - Easy integration into existing workflows
 - Optimized for automation and research use cases
 
 
-<img width="1881" height="815" alt="image" src="https://github.com/user-attachments/assets/ba334110-0053-4fd9-a42f-125b767ec992" />
-
-
 ## Requirements
 
-- Python 3.13+
-- `uv` package manager
-
-Install `uv`:
-
-```bash
-pip install uv
-```
+- Go 1.27+
+- Chrome, Chromium, or Edge
 
 
 ## Setup
 
-### 1. Sync up with the environment
+Create a `.env` file in the repository root:
 
 ```
-uv sync
+MCP_TOKEN=<long random value>
+PORT=8080
 ```
+
+Both values are needed. Without `MCP_TOKEN`, every `/mcp` request returns 401. Without `PORT`, the server tries port 80.
 
 ## Running the Application
 
-Start the MCP server and client in separate terminals.
-
-### Start MCP Server
+Start the server from the repository root:
 
 ```bash
-uvicorn server:app --host 0.0.0.0 --port 8000
+go run ./cmd/server
 ```
 
-### Start Streamlit 
+Check that it is running:
 
 ```bash
-streamlit run app.py
+curl http://localhost:8080/health
 ```
+
+Run the tests:
+
+```bash
+go test ./...
+```
+
+On Linux, the browser needs a display. Start the server with `xvfb-run go run ./cmd/server`.
+
+## Using the Server
+
+Connect any MCP client to `http://localhost:8080/mcp` with the header `Authorization: Bearer <MCP_TOKEN>`.
+
+For example, with Claude Code:
+
+```bash
+claude mcp add --transport http finance http://localhost:8080/mcp --header "Authorization: Bearer <MCP_TOKEN>"
+```
+
+### `scrape_links`
+
+Opens a page in a browser and returns every link on it as `{"links": ["https://...", ...]}`.
+
+| Input | Required | Description |
+|---|---|---|
+| `url` | Yes | Public `http` or `https` page to scrape |
+| `wait_for` | No | CSS selector to wait for, for pages that load links with JavaScript. Defaults to the first link on the page |
+
+A page with no links returns a timeout error after 30 seconds. Two scrapes run at a time, and further calls wait for a free slot.
+
 
 ## Example Use Cases
 
