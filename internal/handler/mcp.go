@@ -3,12 +3,16 @@ package handler
 import (
 	"context"
 	"crypto/subtle"
+	_ "embed"
 	"net/http"
 
 	"github.com/ayush9h/finance-mcp/internal/service"
 	"github.com/modelcontextprotocol/go-sdk/auth"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
+
+//go:embed index.html
+var indexHTML []byte
 
 type scrapeInput struct {
 	URL     string `json:"url" jsonschema:"http or https page to scrape"`
@@ -36,6 +40,10 @@ func scrapeLinks(ctx context.Context, _ *mcp.CallToolRequest, input scrapeInput)
 func New(token string) http.Handler {
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
+		w.Write(indexHTML)
+	})
+
 	// Health Check
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -46,7 +54,7 @@ func New(token string) http.Handler {
 	server := mcp.NewServer(&mcp.Implementation{Name: "finance-mcp", Version: "0.1.0"}, nil)
 	mcp.AddTool(server, &mcp.Tool{Name: "scrape_links", Description: "Open a page in a browser and return every link on it"}, scrapeLinks)
 
-	handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return server }, &mcp.StreamableHTTPOptions{Stateless: true, DisableLocalhostProtection: true})
+	handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return server }, &mcp.StreamableHTTPOptions{Stateless: true})
 
 	verifier := func(_ context.Context, got string, _ *http.Request) (*auth.TokenInfo, error) {
 		if subtle.ConstantTimeCompare([]byte(got), []byte(token)) != 1 {

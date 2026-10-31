@@ -77,7 +77,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ```
 cmd/server/       main.go: env vars and server startup only
 internal/
-├── handler/      mcp.go: tool inputs and outputs, tool handlers, routing, auth
+├── handler/      mcp.go: tool inputs and outputs, tool handlers, routing, auth; index.html: embedded test page
 ├── service/      business logic: URL validation, browser scraping
 └── config/       static configuration such as user agents
 deploy/           systemd unit for a Linux VM
