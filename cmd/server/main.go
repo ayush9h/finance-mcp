@@ -1,47 +1,29 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
-	"github.com/ayush9h/finance-mcp/internal/service"
+	"github.com/ayush9h/finance-mcp/internal/handler"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	mux := http.NewServeMux()
+	if err := godotenv.Load(); err != nil {
+		log.Printf("Warning: .env file not found: %v", err)
+	}
 
-	// Health Check
-	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status":"ok from go. The server has started running"}`))
-	})
+	token := os.Getenv("MCP_TOKEN")
 
-	// Scrape Check
-	mux.HandleFunc("GET /scrape", func(w http.ResponseWriter, r *http.Request) {
-		url := r.URL.Query().Get("url")
-
-		if url == "" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "URL is required"})
-			return
-		}
-
-		title, err := service.ScrapeTitle(url)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "Scrape failed"})
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]string{"url": url, "title": title})
-
-	})
+	addr := ":8080"
+	if port := os.Getenv("PORT"); port != "" {
+		addr = ":" + port
+	}
 
 	server := &http.Server{
-		Addr:    ":8080",
-		Handler: mux,
+		Addr:    addr,
+		Handler: handler.New(token),
 	}
 
 	log.Printf("server listening on %s", server.Addr)

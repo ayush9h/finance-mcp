@@ -79,6 +79,44 @@ uvicorn server:app --host 0.0.0.0 --port 8000
 streamlit run app.py
 ```
 
+## Deploy the Go Server on Render
+
+1. Create a new Web Service from this repository and choose the Docker runtime.
+2. Add the environment variable `MCP_TOKEN` with a long random value, for example from `openssl rand -hex 32`.
+3. Set the health check path to `/health`.
+
+Clients connect to `https://<service>.onrender.com/mcp` with the header `Authorization: Bearer <MCP_TOKEN>`.
+
+## Deploy the Go Server on a Linux VM
+
+The server exposes MCP over HTTP at `/mcp` and needs `MCP_TOKEN` set. The browser runs with a visible window on an Xvfb virtual display.
+
+Build locally and copy the files to the VM:
+
+```bash
+GOOS=linux GOARCH=amd64 go build -o finance-mcp ./cmd/server
+scp finance-mcp deploy/finance-mcp.service <user>@<vm>:
+```
+
+Then on the VM (Debian or Ubuntu):
+
+```bash
+sudo apt update && sudo apt install -y xvfb xauth
+curl -fLO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install -y ./google-chrome-stable_current_amd64.deb
+
+sudo useradd --system --create-home finance-mcp
+sudo install finance-mcp /usr/local/bin/
+sudo install -m 644 finance-mcp.service /etc/systemd/system/
+echo "MCP_TOKEN=$(openssl rand -hex 32)" | sudo tee /etc/finance-mcp.env >/dev/null
+sudo chmod 600 /etc/finance-mcp.env
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now finance-mcp
+```
+
+Clients connect to `http://<vm>:8080/mcp` with the header `Authorization: Bearer <MCP_TOKEN>`. The server speaks plain HTTP, so put it behind a TLS proxy before exposing it to the internet.
+
 ## Example Use Cases
 
 ### Financial Research
