@@ -16,7 +16,7 @@ func main() {
 
 	token := os.Getenv("MCP_TOKEN")
 
-	addr := ":8080"
+	var addr string
 	if port := os.Getenv("PORT"); port != "" {
 		addr = ":" + port
 	}
