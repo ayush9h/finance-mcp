@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import './App.css'
+import { linkName } from './linkName.ts'
 
 const GITHUB_URL = 'https://github.com/ayush9h/finance-mcp'
 
@@ -159,7 +160,8 @@ function Demo() {
                       rel="noopener noreferrer"
                       title={link}
                     >
-                      {link}
+                      <span>{linkName(link)}</span>
+                      <small>{link}</small>
                     </a>
                   </li>
                 ))}

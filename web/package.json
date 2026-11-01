@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test": "node --test api/_mcp.test.ts",
+    "test": "node --test api/_mcp.test.ts src/linkName.test.ts",
     "preview": "vite preview"
   },
   "dependencies": {
