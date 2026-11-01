@@ -36,6 +36,11 @@ func ValidateURL(ctx context.Context, rawURL string) error {
 
 // ScrapeLinks returns every link on the page as an absolute URL
 func ScrapeLinks(ctx context.Context, url, waitFor string) ([]string, error) {
+	return evaluateLinks[string](ctx, url, waitFor, `Array.from(document.links, a => a.href)`)
+}
+
+// evaluateLinks opens the page in a browser and decodes the result of expression into a slice of T
+func evaluateLinks[T any](ctx context.Context, url, waitFor, expression string) ([]T, error) {
 	select {
 	case browserSlots <- struct{}{}:
 		defer func() { <-browserSlots }()
@@ -75,7 +80,7 @@ func ScrapeLinks(ctx context.Context, url, waitFor string) ([]string, error) {
 	}
 
 	// a tags href are found
-	links, err := chromedp.Run(tctx, chromedp.Evaluate[[]string](`Array.from(document.links, a => a.href)`))
+	links, err := chromedp.Run(tctx, chromedp.Evaluate[[]T](expression))
 	if err != nil {
 		return nil, fmt.Errorf("scrape %s: %w", url, err)
 	}

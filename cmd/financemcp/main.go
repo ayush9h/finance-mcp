@@ -1,7 +1,8 @@
 package main
 
 import (
-	"log"
+	"context"
+	"log/slog"
 	"net/http"
 	"os"
 
@@ -11,7 +12,7 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Printf("Warning: .env file not found: %v", err)
+		slog.LogAttrs(context.Background(), slog.LevelError, "environment configuration not found", slog.String("message", err.Error()))
 	}
 
 	token := os.Getenv("MCP_TOKEN")
@@ -26,9 +27,9 @@ func main() {
 		Handler: handler.New(token),
 	}
 
-	log.Printf("server listening on %s", server.Addr)
+	slog.LogAttrs(context.Background(), slog.LevelInfo, "server started running", slog.String("port", server.Addr))
 
 	if err := server.ListenAndServe(); err != nil {
-		log.Fatal(err)
+		slog.LogAttrs(context.Background(), slog.LevelError, "error in startup of server", slog.String("message", err.Error()))
 	}
 }
