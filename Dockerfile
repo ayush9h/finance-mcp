@@ -4,7 +4,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY cmd ./cmd
 COPY internal ./internal
-RUN CGO_ENABLED=0 go build -o /finance-mcp ./cmd/server
+RUN CGO_ENABLED=0 go build -o /finance-mcp ./cmd/financemcp
 
 FROM debian:trixie-slim
 RUN apt-get update \
