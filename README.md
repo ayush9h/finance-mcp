@@ -59,6 +59,8 @@ PORT=8080
 
 Both values are needed. Without `MCP_TOKEN`, every `/mcp` request returns 401. Without `PORT`, the server tries port 80.
 
+The landing page in `web/` deploys to Vercel with `web` as the project's root directory. The Go server stays on Render because it needs Chromium. Set `MCP_URL` (the server's `/mcp` address) and `MCP_TOKEN` in the Vercel project: `web/api/mcp.ts` adds the token on the server, so it never reaches the browser. Do not prefix either with `VITE_`.
+
 ## Running the Application
 
 Start the server from the repository root:

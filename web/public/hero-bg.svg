@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <radialGradient id="a" cx=".06" cy="0" r=".5">
+      <stop offset="0" stop-color="#148a55"/>
+      <stop offset="1" stop-color="#148a55" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b" cx=".9" cy="1" r=".55">
+      <stop offset="0" stop-color="#148a55"/>
+      <stop offset="1" stop-color="#148a55" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".05"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".12"/>
+    </linearGradient>
+    <filter id="n">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/>
+      <feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="480" fill="#0a6f43"/>
+  <rect width="1200" height="480" fill="url(#a)"/>
+  <rect width="1200" height="480" fill="url(#b)"/>
+  <g fill="none" stroke="url(#c)" stroke-width="22" stroke-opacity="1">
+    <path d="M290 500V320a310 310 0 0 1 620 0V500"/>
+    <path d="M338 500V320a262 262 0 0 1 524 0V500"/>
+    <path d="M386 500V320a214 214 0 0 1 428 0V500"/>
+    <path d="M434 500V320a166 166 0 0 1 332 0V500"/>
+    <path d="M482 500V320a118 118 0 0 1 236 0V500"/>
+    <path d="M530 500V320a70 70 0 0 1 140 0V500"/>
+  </g>
+  <rect width="1200" height="480" filter="url(#n)"/>
+</svg>

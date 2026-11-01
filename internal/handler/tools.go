@@ -2,16 +2,29 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"log/slog"
+	"time"
 
 	"github.com/ayush9h/finance-mcp/internal/service"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"golang.org/x/time/rate"
 )
+
+var scrapeLimiter = rate.NewLimiter(rate.Every(15*time.Second), 4)
+var errBusy = errors.New("server busy, try again in a minute")
 
 // Input schema for ScrapeLinks
 type scrapeInput struct {
 	URL     string  `json:"url" jsonschema:"http or https page to scrape"`
 	WaitFor *string `json:"wait_for,omitempty" jsonschema:"CSS Selector to wait for before reading links"`
+}
+
+func (i scrapeInput) waitFor() string {
+	if i.WaitFor == nil {
+		return ""
+	}
+	return *i.WaitFor
 }
 
 // Output schema for ScrapeLinks
@@ -23,11 +36,17 @@ type scrapeOutput struct {
 func scrapeLinks(ctx context.Context, _ *mcp.CallToolRequest, input scrapeInput) (*mcp.CallToolResult, scrapeOutput, error) {
 	if err := service.ValidateURL(ctx, input.URL); err != nil {
 		slog.LogAttrs(ctx, slog.LevelError, "error in url validation", slog.String("message", err.Error()))
+		return nil, scrapeOutput{}, err
 	}
 
-	links, err := service.ScrapeLinks(ctx, input.URL, *input.WaitFor)
+	if !scrapeLimiter.Allow() {
+		return nil, scrapeOutput{}, errBusy
+	}
+
+	links, err := service.ScrapeLinks(ctx, input.URL, input.waitFor())
 	if err != nil {
 		slog.LogAttrs(ctx, slog.LevelError, "error in link scraping", slog.String("message", err.Error()))
+		return nil, scrapeOutput{}, err
 	}
 
 	slog.Info("scrape completed")
@@ -44,11 +63,17 @@ type reportsOutput struct {
 func scrapeReports(ctx context.Context, _ *mcp.CallToolRequest, input scrapeInput) (*mcp.CallToolResult, reportsOutput, error) {
 	if err := service.ValidateURL(ctx, input.URL); err != nil {
 		slog.LogAttrs(ctx, slog.LevelError, "error in url validation", slog.String("message", err.Error()))
+		return nil, reportsOutput{}, err
 	}
 
-	links, err := service.ScrapeReports(ctx, input.URL, *input.WaitFor)
+	if !scrapeLimiter.Allow() {
+		return nil, reportsOutput{}, errBusy
+	}
+
+	links, err := service.ScrapeReports(ctx, input.URL, input.waitFor())
 	if err != nil {
 		slog.LogAttrs(ctx, slog.LevelError, "error in report scraping", slog.String("message", err.Error()))
+		return nil, reportsOutput{}, err
 	}
 
 	slog.Info("scrape completed")
